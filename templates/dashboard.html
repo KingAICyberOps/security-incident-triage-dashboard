@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Security Dashboard</h1>
+
+        <p>
+            Overview of saved security incidents and risk levels.
+        </p>
+
+        <div class="dashboard-links">
+            <a class="history-link" href="{{ url_for('home') }}">
+                New Assessment
+            </a>
+
+            <a class="history-link" href="{{ url_for('history') }}">
+                Incident History
+            </a>
+        </div>
+
+        <section class="stat-grid">
+
+            <div class="stat-card">
+                <h2>{{ statistics.total }}</h2>
+                <p>Total Incidents</p>
+            </div>
+
+            <div class="stat-card low-card">
+                <h2>{{ statistics.low_count }}</h2>
+                <p>Low Risk</p>
+            </div>
+
+            <div class="stat-card medium-card">
+                <h2>{{ statistics.medium_count }}</h2>
+                <p>Medium Risk</p>
+            </div>
+
+            <div class="stat-card high-card">
+                <h2>{{ statistics.high_count }}</h2>
+                <p>High Risk</p>
+            </div>
+
+        </section>
+
+        <h2>Recent Incidents</h2>
+
+        {% if recent_incidents %}
+
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Source</th>
+                    <th>Risk</th>
+                    <th>Score</th>
+                    <th>Submitted</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for incident in recent_incidents %}
+                <tr>
+                    <td>{{ incident.id }}</td>
+                    <td>{{ incident.incident_type }}</td>
+                    <td>{{ incident.source }}</td>
+
+                    <td>
+                        <span class="risk-badge {{ incident.risk_level|lower }}">
+                            {{ incident.risk_level }}
+                        </span>
+                    </td>
+
+                    <td>{{ incident.risk_score }}</td>
+                    <td>{{ incident.submitted_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <p>No incidents have been submitted yet.</p>
+
+        {% endif %}
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Incident History</h1>
+
+        <p>
+            Saved security incidents and their assessment results.
+        </p>
+
+        <div class="dashboard-links">
+    <a class="history-link" href="{{ url_for('home') }}">
+        Back to Assessment
+    </a>
+
+    <a class="history-link" href="{{ url_for('dashboard') }}">
+        Security Dashboard
+    </a>
+</div>
+
+        {% if incidents %}
+
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Source</th>
+                    <th>Risk</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for incident in incidents %}
+                <tr>
+                    <td>{{ incident.id }}</td>
+                    <td>{{ incident.incident_type }}</td>
+                    <td>{{ incident.source }}</td>
+                    <td>
+                        <span class="risk-badge {{ incident.risk_level|lower }}">
+                            {{ incident.risk_level }}
+                        </span>
+                    </td>
+                    <td>{{ incident.risk_score }}</td>
+                    <td>{{ incident.status }}</td>
+                    <td>{{ incident.submitted_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <p>No incidents have been saved yet.</p>
+
+        {% endif %}
+    </main>
+</body>
+</html>

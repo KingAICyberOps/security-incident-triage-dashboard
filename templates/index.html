@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Incident Triage Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Security Incident Triage Dashboard</h1>
+
+        <p class="intro">
+            Submit a suspicious email, message, link, or other security concern
+            for an initial risk assessment.
+            <a class="history-link" href="{{ url_for('history') }}">
+    View Incident History
+</a>
+<a class="history-link" href="{{ url_for('dashboard') }}">
+    View Security Dashboard
+</a>
+        </p>
+
+        <form method="POST">
+
+            <label for="incident_type">Incident Type</label>
+            <select id="incident_type" name="incident_type" required>
+                <option value="">Select an incident type</option>
+
+                <option value="Email"
+                    {% if form_data.incident_type == "Email" %}selected{% endif %}>
+                    Email
+                </option>
+
+                <option value="Message"
+                    {% if form_data.incident_type == "Message" %}selected{% endif %}>
+                    Text or Message
+                </option>
+
+                <option value="Link"
+                    {% if form_data.incident_type == "Link" %}selected{% endif %}>
+                    Link or Website
+                </option>
+
+                <option value="Other"
+                    {% if form_data.incident_type == "Other" %}selected{% endif %}>
+                    Other
+                </option>
+            </select>
+
+            <label for="source">Sender or Source</label>
+            <input
+                type="text"
+                id="source"
+                name="source"
+                value="{{ form_data.source }}"
+                placeholder="Example: billing@example.com"
+            >
+
+            <label for="description">Incident Details</label>
+            <textarea
+                id="description"
+                name="description"
+                rows="7"
+                placeholder="Paste the suspicious message or describe what happened."
+                required
+            >{{ form_data.description }}</textarea>
+
+            <fieldset>
+                <legend>Warning Signs</legend>
+
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        name="warning_signs"
+                        value="Urgent or threatening language"
+                        {% if "Urgent or threatening language" in selected_signs %}checked{% endif %}
+                    >
+                    Urgent or threatening language
+                </label>
+
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        name="warning_signs"
+                        value="Requests password or account information"
+                        {% if "Requests password or account information" in selected_signs %}checked{% endif %}
+                    >
+                    Requests password or account information
+                </label>
+
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        name="warning_signs"
+                        value="Requests money or financial information"
+                        {% if "Requests money or financial information" in selected_signs %}checked{% endif %}
+                    >
+                    Requests money or financial information
+                </label>
+
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        name="warning_signs"
+                        value="Suspicious link or unexpected attachment"
+                        {% if "Suspicious link or unexpected attachment" in selected_signs %}checked{% endif %}
+                    >
+                    Suspicious link or unexpected attachment
+                </label>
+
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        name="warning_signs"
+                        value="Sender or source does not match"
+                        {% if "Sender or source does not match" in selected_signs %}checked{% endif %}
+                    >
+                    Sender or source does not match what the message claims
+                </label>
+            </fieldset>
+
+            <button type="submit">Assess Incident</button>
+        </form>
+
+        {% if result %}
+        <section class="result {{ result.level|lower }}">
+            <h2>Assessment Result</h2>
+
+            <p>
+                <strong>Risk Level:</strong>
+                {{ result.level }}
+            </p>
+
+            <p>
+                <strong>Risk Score:</strong>
+                {{ result.score }}
+            </p>
+
+            <h3>Warning Signs Identified</h3>
+
+            {% if result.warning_signs %}
+                <ul>
+                    {% for sign in result.warning_signs %}
+                        <li>{{ sign }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No warning signs were selected.</p>
+            {% endif %}
+
+            <h3>Recommended Next Steps</h3>
+
+            <p>{{ result.recommendation }}</p>
+
+            <p class="disclaimer">
+                This is an initial risk assessment and does not prove that an incident
+                is safe or malicious.
+            </p>
+        </section>
+        {% endif %}
+    </main>
+</body>
+</html>
