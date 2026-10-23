@@ -6,8 +6,7 @@ The application allows a user to enter information about a suspicious email, mes
 
 The project is meant for initial triage and awareness. It does not replace antivirus software or professional cybersecurity analysis.
 
-The project is meant for initial triage and awareness. It does not replace antivirus
-software or professional cybersecurity analysis.
+
 
 ## Live Demo
 
@@ -54,6 +53,7 @@ Risk levels:
 - CSS
 - Git
 - GitHub
+- PythonAnywhere
 
 ## Running the Project
 
